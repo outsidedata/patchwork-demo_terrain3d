@@ -1,0 +1,1173 @@
+{
+  "program": {
+    "world": 12000,
+    "hscale": 1000,
+    "sea": 0.5,
+    "flood": false,
+    "out": "ground",
+    "nodes": [
+      {
+        "id": "roll",
+        "op": "noise",
+        "kind": "simplex",
+        "freq": 14,
+        "seed": 11
+      },
+      {
+        "id": "tufts",
+        "op": "noise",
+        "kind": "simplex",
+        "freq": 140,
+        "seed": 12
+      },
+      {
+        "id": "rolled",
+        "op": "combine",
+        "mode": "lerp",
+        "a": "roll",
+        "b": "tufts",
+        "t": 0.06
+      },
+      {
+        "id": "meadowH",
+        "op": "remap",
+        "input": "rolled",
+        "inLo": 0.1,
+        "inHi": 0.9,
+        "outLo": -0.03,
+        "outHi": 0.04,
+        "ease": "smooth"
+      },
+      {
+        "id": "pushX",
+        "op": "noise",
+        "kind": "value",
+        "freq": 9,
+        "seed": 31
+      },
+      {
+        "id": "pushXs",
+        "op": "remap",
+        "input": "pushX",
+        "inLo": 0,
+        "inHi": 1,
+        "outLo": -1,
+        "outHi": 1,
+        "ease": "smooth"
+      },
+      {
+        "id": "pushZ",
+        "op": "noise",
+        "kind": "value",
+        "freq": 9,
+        "seed": 32
+      },
+      {
+        "id": "pushZs",
+        "op": "remap",
+        "input": "pushZ",
+        "inLo": 0,
+        "inHi": 1,
+        "outLo": -1,
+        "outHi": 1,
+        "ease": "smooth"
+      },
+      {
+        "id": "grain",
+        "op": "noise",
+        "kind": "value",
+        "freq": 16,
+        "seed": 41
+      },
+      {
+        "id": "warped",
+        "op": "warp",
+        "input": "grain",
+        "x": "pushXs",
+        "z": "pushZs",
+        "amount": 260
+      },
+      {
+        "id": "crest",
+        "op": "fold",
+        "input": "warped",
+        "kind": "ridge"
+      },
+      {
+        "id": "benches",
+        "op": "fold",
+        "input": "crest",
+        "kind": "terrace",
+        "steps": 6
+      },
+      {
+        "id": "scree",
+        "op": "noise",
+        "kind": "value",
+        "freq": 200,
+        "seed": 66
+      },
+      {
+        "id": "broken",
+        "op": "combine",
+        "mode": "lerp",
+        "a": "benches",
+        "b": "scree",
+        "t": 0.03
+      },
+      {
+        "id": "cragsH",
+        "op": "remap",
+        "input": "broken",
+        "inLo": 0,
+        "inHi": 1,
+        "outLo": 0.08,
+        "outHi": 0.7,
+        "ease": "smooth"
+      },
+      {
+        "id": "domes",
+        "op": "noise",
+        "kind": "value",
+        "freq": 6,
+        "seed": 51
+      },
+      {
+        "id": "aretes",
+        "op": "noise",
+        "kind": "simplex",
+        "freq": 22,
+        "seed": 52
+      },
+      {
+        "id": "aretesR",
+        "op": "fold",
+        "input": "aretes",
+        "kind": "ridge"
+      },
+      {
+        "id": "icefield",
+        "op": "combine",
+        "mode": "lerp",
+        "a": "domes",
+        "b": "aretesR",
+        "t": 0.22
+      },
+      {
+        "id": "glacierH",
+        "op": "remap",
+        "input": "icefield",
+        "inLo": 0.1,
+        "inHi": 0.9,
+        "outLo": 0.45,
+        "outHi": 1,
+        "ease": "smoother"
+      },
+      {
+        "id": "bendX",
+        "op": "noise",
+        "kind": "value",
+        "freq": 30,
+        "seed": 71
+      },
+      {
+        "id": "bendXs",
+        "op": "remap",
+        "input": "bendX",
+        "inLo": 0,
+        "inHi": 1,
+        "outLo": -1,
+        "outHi": 1,
+        "ease": "smooth"
+      },
+      {
+        "id": "bendZ",
+        "op": "noise",
+        "kind": "value",
+        "freq": 30,
+        "seed": 72
+      },
+      {
+        "id": "bendZs",
+        "op": "remap",
+        "input": "bendZ",
+        "inLo": 0,
+        "inHi": 1,
+        "outLo": -1,
+        "outHi": 1,
+        "ease": "smooth"
+      },
+      {
+        "id": "ripple",
+        "op": "noise",
+        "kind": "simplex",
+        "freq": 67,
+        "seed": 73,
+        "rotate": 0.35,
+        "stretch": [
+          1,
+          0.17
+        ]
+      },
+      {
+        "id": "rippleW",
+        "op": "warp",
+        "input": "ripple",
+        "x": "bendXs",
+        "z": "bendZs",
+        "amount": 140
+      },
+      {
+        "id": "ridges",
+        "op": "fold",
+        "input": "rippleW",
+        "kind": "ridge"
+      },
+      {
+        "id": "dunes",
+        "op": "scale",
+        "input": "ridges",
+        "by": 0.022
+      },
+      {
+        "id": "swell",
+        "op": "noise",
+        "kind": "value",
+        "freq": 12,
+        "seed": 74
+      },
+      {
+        "id": "floor",
+        "op": "remap",
+        "input": "swell",
+        "inLo": 0,
+        "inHi": 1,
+        "outLo": 0.045,
+        "outHi": 0.105,
+        "ease": "smooth"
+      },
+      {
+        "id": "desertH",
+        "op": "combine",
+        "mode": "add",
+        "a": "dunes",
+        "b": "floor"
+      },
+      {
+        "id": "meadowS",
+        "op": "noise",
+        "kind": "value",
+        "freq": 5,
+        "seed": 101
+      },
+      {
+        "id": "cragsN",
+        "op": "noise",
+        "kind": "value",
+        "freq": 5,
+        "seed": 102
+      },
+      {
+        "id": "glacierN",
+        "op": "noise",
+        "kind": "value",
+        "freq": 4,
+        "seed": 103
+      },
+      {
+        "id": "desertN",
+        "op": "noise",
+        "kind": "value",
+        "freq": 4,
+        "seed": 104
+      },
+      {
+        "id": "cragsS",
+        "op": "clearing",
+        "input": "cragsN",
+        "flat": 500,
+        "floor": 0
+      },
+      {
+        "id": "glacierS",
+        "op": "clearing",
+        "input": "glacierN",
+        "flat": 700,
+        "floor": 0
+      },
+      {
+        "id": "desertS",
+        "op": "clearing",
+        "input": "desertN",
+        "flat": 600,
+        "floor": 0
+      },
+      {
+        "id": "ground",
+        "op": "biomes",
+        "sharp": 7,
+        "list": [
+          {
+            "name": "meadow",
+            "strength": "meadowS",
+            "height": "meadowH"
+          },
+          {
+            "name": "crags",
+            "strength": "cragsS",
+            "height": "cragsH"
+          },
+          {
+            "name": "glacier",
+            "strength": "glacierS",
+            "height": "glacierH"
+          },
+          {
+            "name": "desert",
+            "strength": "desertS",
+            "height": "desertH"
+          }
+        ]
+      }
+    ]
+  },
+  "analysis": {
+    "slopeStep": 3,
+    "curveStep": 10,
+    "positionRadius": 50,
+    "occlusionRadius": 100,
+    "occlusionSteps": 6,
+    "cliffProbe": 40,
+    "cliffSlope": 0.6,
+    "cliffDrop": 40,
+    "flatAngle": 0.03,
+    "records": 50000
+  },
+  "ground": {
+    "compose": "stack",
+    "layers": [
+      {
+        "name": "meadow",
+        "map": "meadow-color-1024",
+        "normal": "meadow-normal-1024",
+        "scale": 40,
+        "warp": [
+          {
+            "freq": 0.005,
+            "amp": 30,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 0
+          },
+          {
+            "freq": 0.035,
+            "amp": 3,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 0.7
+          },
+          {
+            "freq": 0.18,
+            "amp": 0.5,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 1.9
+          }
+        ]
+      },
+      {
+        "name": "shore",
+        "map": "gravel-color-1024",
+        "normal": "gravel-normal-1024",
+        "scale": 30,
+        "where": [
+          {
+            "q": "height",
+            "lo": 2.5,
+            "hi": -0.5
+          }
+        ],
+        "noise": {
+          "freq": 0.08,
+          "amp": 0.9
+        },
+        "edge": 0.35,
+        "warp": [
+          {
+            "freq": 0.005,
+            "amp": 12,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 1.1
+          },
+          {
+            "freq": 0.035,
+            "amp": 1.2,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 1.8
+          },
+          {
+            "freq": 0.18,
+            "amp": 0.5,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 3
+          }
+        ]
+      },
+      {
+        "name": "sand",
+        "map": "dry-ground-color-1024",
+        "normal": "dry-ground-normal-1024",
+        "scale": 40,
+        "where": [
+          {
+            "q": "biome:desert",
+            "lo": 0.35,
+            "hi": 0.65
+          }
+        ],
+        "noise": {
+          "freq": 0.02,
+          "amp": 0.45
+        },
+        "edge": 0.3,
+        "warp": [
+          {
+            "freq": 0.005,
+            "amp": 30,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 0.3
+          },
+          {
+            "freq": 0.035,
+            "amp": 3,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 1
+          },
+          {
+            "freq": 0.18,
+            "amp": 0.5,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 2.1999999999999997
+          }
+        ]
+      },
+      {
+        "name": "mud",
+        "map": "cracked-mud-color-1024",
+        "normal": "cracked-mud-normal-1024",
+        "scale": 35,
+        "where": [
+          {
+            "q": "biome:desert",
+            "lo": 0.5,
+            "hi": 0.8
+          },
+          {
+            "q": "height",
+            "lo": 75,
+            "hi": 55
+          },
+          {
+            "q": "slope",
+            "lo": 0.12,
+            "hi": 0.05
+          }
+        ],
+        "noise": {
+          "freq": 0.06,
+          "amp": 0.9
+        },
+        "edge": 0.35,
+        "warp": [
+          {
+            "freq": 0.005,
+            "amp": 12,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 0.5
+          },
+          {
+            "freq": 0.035,
+            "amp": 1.2,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 1.2
+          },
+          {
+            "freq": 0.18,
+            "amp": 0.5,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 2.4
+          }
+        ]
+      },
+      {
+        "name": "scree",
+        "map": "rock-color-1024",
+        "normal": "rock-normal-1024",
+        "scale": 40,
+        "strength": 1.1,
+        "tri": true,
+        "sharp": 12,
+        "where": [
+          {
+            "q": "biome:crags",
+            "lo": 0.35,
+            "hi": 0.8
+          }
+        ],
+        "noise": {
+          "freq": 0.03,
+          "amp": 0.5
+        },
+        "edge": 0.3,
+        "warp": [
+          {
+            "freq": 0.005,
+            "amp": 20,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 0.9
+          },
+          {
+            "freq": 0.035,
+            "amp": 2,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 1.6
+          },
+          {
+            "freq": 0.18,
+            "amp": 0.5,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 2.8
+          }
+        ]
+      },
+      {
+        "name": "rock",
+        "map": "rock-color-1024",
+        "normal": "rock-normal-1024",
+        "scale": 35,
+        "strength": 1.2,
+        "tri": true,
+        "sharp": 12,
+        "where": [
+          {
+            "q": "slope",
+            "lo": 0.3,
+            "hi": 0.45
+          },
+          {
+            "q": "biome:desert",
+            "lo": 0.6,
+            "hi": 0.3
+          }
+        ],
+        "noise": {
+          "freq": 0.12,
+          "amp": 0.8
+        },
+        "edge": 0.35,
+        "warp": [
+          {
+            "freq": 0.006,
+            "amp": 18,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 0
+          },
+          {
+            "freq": 0.04,
+            "amp": 1.5,
+            "stretch": [
+              1,
+              3,
+              1
+            ],
+            "rotate": 0.4
+          },
+          {
+            "freq": 0.2,
+            "amp": 0.6,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 1.3
+          }
+        ]
+      },
+      {
+        "name": "sandstone",
+        "map": "desert-rock-color-1024",
+        "normal": "desert-rock-normal-1024",
+        "scale": 45,
+        "strength": 1.2,
+        "tri": true,
+        "sharp": 12,
+        "where": [
+          {
+            "q": "slope",
+            "lo": 0.25,
+            "hi": 0.4
+          },
+          {
+            "q": "biome:desert",
+            "lo": 0.3,
+            "hi": 0.6
+          }
+        ],
+        "noise": {
+          "freq": 0.12,
+          "amp": 0.8
+        },
+        "edge": 0.35,
+        "warp": [
+          {
+            "freq": 0.006,
+            "amp": 18,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 0.2
+          },
+          {
+            "freq": 0.04,
+            "amp": 1.5,
+            "stretch": [
+              1,
+              3,
+              1
+            ],
+            "rotate": 0.6
+          },
+          {
+            "freq": 0.2,
+            "amp": 0.6,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 1.5
+          }
+        ]
+      },
+      {
+        "name": "glacier",
+        "map": "snow-color-1024",
+        "normal": "snow-normal-1024",
+        "scale": 35,
+        "strength": 0.8,
+        "tri": true,
+        "sharp": 12,
+        "where": [
+          {
+            "q": "biome:glacier",
+            "lo": 0.3,
+            "hi": 0.7
+          },
+          {
+            "q": "slope",
+            "lo": 0.55,
+            "hi": 0.3
+          }
+        ],
+        "noise": {
+          "freq": 0.08,
+          "amp": 0.8
+        },
+        "edge": 0.35,
+        "warp": [
+          {
+            "freq": 0.005,
+            "amp": 20,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 2.1
+          },
+          {
+            "freq": 0.035,
+            "amp": 2,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 2.8
+          },
+          {
+            "freq": 0.18,
+            "amp": 0.5,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 4
+          }
+        ]
+      },
+      {
+        "name": "snow",
+        "map": "snow-color-1024",
+        "normal": "snow-normal-1024",
+        "scale": 35,
+        "strength": 0.8,
+        "tri": true,
+        "sharp": 12,
+        "where": [
+          {
+            "q": "relief",
+            "lo": 0.6,
+            "hi": 0.78
+          },
+          {
+            "q": "slope",
+            "lo": 0.5,
+            "hi": 0.25
+          }
+        ],
+        "noise": {
+          "freq": 0.08,
+          "amp": 0.8
+        },
+        "edge": 0.35,
+        "warp": [
+          {
+            "freq": 0.005,
+            "amp": 20,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 2.5
+          },
+          {
+            "freq": 0.035,
+            "amp": 2,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 3.2
+          },
+          {
+            "freq": 0.18,
+            "amp": 0.5,
+            "stretch": [
+              1,
+              1,
+              1
+            ],
+            "rotate": 4.4
+          }
+        ]
+      },
+      {
+        "name": "road",
+        "map": "gravel-color-1024",
+        "normal": "gravel-normal-1024",
+        "scale": 30,
+        "where": [
+          {
+            "q": "surface:road",
+            "lo": 0.2,
+            "hi": 0.8
+          }
+        ],
+        "edge": 0.2
+      }
+    ],
+    "heightBlend": {
+      "amount": 2,
+      "depth": 0.1
+    },
+    "far": {
+      "amount": 0.7,
+      "scale": 7.3
+    },
+    "roughness": 0.9
+  },
+  "surfaces": {
+    "road": {
+      "cover": 0,
+      "grip": 1,
+      "drag": 0.02,
+      "mark": 0.3
+    }
+  },
+  "layers": [
+    {
+      "at": [
+        -700,
+        620
+      ],
+      "size": 900,
+      "px": 300,
+      "strokes": [
+        {
+          "verb": "bench",
+          "radius": 9,
+          "hardness": 0.45,
+          "strength": 0,
+          "level": 0,
+          "surface": "",
+          "path": [
+            [
+              -950,
+              620
+            ],
+            [
+              -900,
+              610
+            ],
+            [
+              -600,
+              690
+            ],
+            [
+              -300,
+              640
+            ],
+            [
+              0,
+              560
+            ],
+            [
+              300,
+              520
+            ],
+            [
+              650,
+              590
+            ],
+            [
+              1000,
+              690
+            ],
+            [
+              1300,
+              720
+            ]
+          ]
+        },
+        {
+          "verb": "surface",
+          "radius": 4.5,
+          "hardness": 0.7,
+          "strength": 0,
+          "level": 0,
+          "surface": "road",
+          "path": [
+            [
+              -950,
+              620
+            ],
+            [
+              -900,
+              610
+            ],
+            [
+              -600,
+              690
+            ],
+            [
+              -300,
+              640
+            ],
+            [
+              0,
+              560
+            ],
+            [
+              300,
+              520
+            ],
+            [
+              650,
+              590
+            ],
+            [
+              1000,
+              690
+            ],
+            [
+              1300,
+              720
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "at": [
+        200,
+        620
+      ],
+      "size": 900,
+      "px": 300,
+      "strokes": [
+        {
+          "verb": "bench",
+          "radius": 9,
+          "hardness": 0.45,
+          "strength": 0,
+          "level": 0,
+          "surface": "",
+          "path": [
+            [
+              -950,
+              620
+            ],
+            [
+              -900,
+              610
+            ],
+            [
+              -600,
+              690
+            ],
+            [
+              -300,
+              640
+            ],
+            [
+              0,
+              560
+            ],
+            [
+              300,
+              520
+            ],
+            [
+              650,
+              590
+            ],
+            [
+              1000,
+              690
+            ],
+            [
+              1300,
+              720
+            ]
+          ]
+        },
+        {
+          "verb": "surface",
+          "radius": 4.5,
+          "hardness": 0.7,
+          "strength": 0,
+          "level": 0,
+          "surface": "road",
+          "path": [
+            [
+              -950,
+              620
+            ],
+            [
+              -900,
+              610
+            ],
+            [
+              -600,
+              690
+            ],
+            [
+              -300,
+              640
+            ],
+            [
+              0,
+              560
+            ],
+            [
+              300,
+              520
+            ],
+            [
+              650,
+              590
+            ],
+            [
+              1000,
+              690
+            ],
+            [
+              1300,
+              720
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "at": [
+        1100,
+        620
+      ],
+      "size": 900,
+      "px": 300,
+      "strokes": [
+        {
+          "verb": "bench",
+          "radius": 9,
+          "hardness": 0.45,
+          "strength": 0,
+          "level": 0,
+          "surface": "",
+          "path": [
+            [
+              -950,
+              620
+            ],
+            [
+              -900,
+              610
+            ],
+            [
+              -600,
+              690
+            ],
+            [
+              -300,
+              640
+            ],
+            [
+              0,
+              560
+            ],
+            [
+              300,
+              520
+            ],
+            [
+              650,
+              590
+            ],
+            [
+              1000,
+              690
+            ],
+            [
+              1300,
+              720
+            ]
+          ]
+        },
+        {
+          "verb": "surface",
+          "radius": 4.5,
+          "hardness": 0.7,
+          "strength": 0,
+          "level": 0,
+          "surface": "road",
+          "path": [
+            [
+              -950,
+              620
+            ],
+            [
+              -900,
+              610
+            ],
+            [
+              -600,
+              690
+            ],
+            [
+              -300,
+              640
+            ],
+            [
+              0,
+              560
+            ],
+            [
+              300,
+              520
+            ],
+            [
+              650,
+              590
+            ],
+            [
+              1000,
+              690
+            ],
+            [
+              1300,
+              720
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

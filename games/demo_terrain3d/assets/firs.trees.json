@@ -1,0 +1,16 @@
+{
+  "trees": {
+    "tall": { "species": "spruce", "height": 9.3 },
+    "mid": { "species": "spruce-mid", "height": 4.2 },
+    "small": { "species": "spruce-small", "height": 1.5 }
+  },
+  "lods": [
+    { "name": "0", "resolution": 2, "keep": 1 },
+    { "name": "1", "resolution": 1, "keep": 2 },
+    { "name": "2", "resolution": 1, "levels": 1, "keep": 4 },
+    { "name": "3", "crown": { "bands": 4, "sides": 8, "taper": 0.35 } }
+  ],
+  "colours": { "bark": "#705a45", "leaf": "#457b45" },
+  "textures": { "leaf": 1024, "normal": 512 },
+  "node": "{tree}-{lod}-{part}"
+}

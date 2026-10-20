@@ -1,0 +1,160 @@
+{
+  "world": {
+    "tier": {
+      "title": "HD",
+      "lines": [
+        "rings: 3 m cells near the eye, out to 9 km",
+        "ground: ten warped photo layers at 1024² to the horizon, alpine and desert, height-blended",
+        "firs and boulders to 700 m, grass to 180 m, soft shadows to 240 m"
+      ]
+    },
+    "shipped": { "plugins": ["seabed"] },
+    "seabed": { "mods": { "land": "terrain3d" } },
+    "ocean3d": {
+      "windSpeed": 4, "windDeg": 30, "fetchKm": 3, "swellScale": 0, "swellDeg": 65, "amp": 0.05, "chop": 0.9,
+      "foamRecovery": 0.35, "seed": 731, "patches": [240, 40, 9], "shoalDepth": 2, "shoalFloor": 0, "repeat": 200,
+      "weather": { "windRef": 12, "floor": 0.3 },
+      "deep": "#0b2a2f", "scatter": "#1f6a66", "glow": 0.3, "glowPower": 4, "glint": 1.4, "glintPower": 480,
+      "foamColour": "#e8f0f0", "foamJ": [0.5, 0.8], "bubbles": 2, "bubbleEdge": 0.25, "alpha": 0.55, "clearDepth": 8,
+      "rings": 120, "segs": 192, "far": 6000,
+      "depthHalf": 1200, "depthMax": 32, "depthRes": 256, "depthRows": 8,
+      "mods": { "land": "seabed", "wind": "skydome3d", "light": "skydome3d" }
+    },
+    "terrain3d": {
+      "field": "hd",
+      "rings": [
+        { "reach": 240, "seg": 160 },
+        { "reach": 960, "seg": 160 },
+        { "reach": 3600, "seg": 150 },
+        { "reach": 9000, "seg": 90 }
+      ],
+      "shadowReach": 240,
+      "budget": 6,
+      "preload": true,
+      "seabed": false,
+      "bake": { "rings": [512, 2048, 8192], "res": 2048, "near": 150, "far": 300, "cliff": 0.6, "band": 0.06, "budget": 1024 },
+      "maps": { "near": 6, "reach": 300, "step": 8, "small": 256 },
+      "mods": { "ready": ["scatter3d"] }
+    },
+    "scatter3d": {
+      "cutout": 0.45,
+      "coverage": 0.25,
+      "budget": 2,
+      "remember": 100000,
+      "packs": {
+        "trees": {
+          "asset": "firs",
+          "rows": { "tall": { "weight": 5, "solid": 0.35 }, "mid": { "weight": 3, "solid": 0.35 }, "small": { "weight": 2, "solid": 0.35 } },
+          "cell": 20,
+          "reach": 700,
+          "seed": 91,
+          "lods": [90, 220, 450],
+          "shadow": 60,
+          "leaf": 0.55,
+          "density": 0.5,
+          "rules": [
+            { "q": "slope", "lo": 0.46, "hi": 0.32 },
+            { "q": "layer:meadow", "lo": 0.5, "hi": 0.85 },
+            { "q": "height", "lo": 1, "hi": 4 },
+            { "q": "cliffAbove", "lo": 0.3, "hi": 0.08 }
+          ],
+          "clearing": 0,
+          "size": [0.75, 0.8],
+          "vary": 0.18
+        },
+        "clumps": {
+          "asset": "clumps",
+          "rows": {
+            "grass01": { "weight": 4 }, "grass02": { "weight": 4 }, "grass03": { "weight": 3 }, "dry01": { "weight": 3 },
+            "dry02": { "weight": 3 }, "flowers01": { "weight": 1 }, "flowers02": { "weight": 1 }, "flowers03": { "weight": 1 },
+            "reeds": { "weight": 1 }
+          },
+          "cell": 3.5,
+          "reach": 180,
+          "seed": 311,
+          "lods": [90],
+          "shadow": 0,
+          "leaf": 0.55,
+          "density": 0.35,
+          "rules": [
+            { "q": "slope", "lo": 0.44, "hi": 0.3 },
+            { "q": "layer:meadow", "lo": 0.55, "hi": 0.9 },
+            { "q": "height", "lo": 0.3, "hi": 1.5 }
+          ],
+          "clearing": 0,
+          "size": [0.55, 0.7],
+          "vary": 0.22
+        },
+        "rocks": {
+          "shape": { "detail": 1, "lumpy": [0.74, 0.36], "squash": 0.72 },
+          "colour": "#77736a",
+          "surface": {
+            "broad": 1.4, "fine": 5.0, "lift": 0.78, "range": 0.44, "mix": [0.6, 0.4],
+            "moss": { "from": 0.55, "to": 0.95, "amount": 0.4, "up": [0.2, 0.8], "colour": "#27401d" },
+            "bump": 0.5, "rough": 0.85
+          },
+          "rows": { "a": { "weight": 1, "solid": 0.8 }, "b": { "weight": 1, "solid": 0.8 }, "c": { "weight": 1, "solid": 0.8 } },
+          "cell": 30,
+          "reach": 500,
+          "seed": 173,
+          "lods": [250],
+          "shadow": 60,
+          "leaf": 0,
+          "density": 0.5,
+          "rules": [{ "q": "cliffAbove", "lo": 0.05, "hi": 0.34 }, { "q": "height", "lo": 0.5, "hi": 3 }, { "q": "slope", "lo": 0.3, "hi": 0.15 }],
+          "clearing": 0,
+          "size": [0.7, 7.5],
+          "vary": 0.3
+        },
+        "stones": {
+          "shape": { "detail": 1, "lumpy": [0.6, 0.3], "squash": 0.6 },
+          "colour": "#a07850",
+          "surface": {
+            "broad": 1.1, "fine": 6.0, "lift": 0.7, "range": 0.4, "mix": [0.55, 0.45],
+            "moss": { "from": 0.9, "to": 1.0, "amount": 0, "up": [0.2, 0.8], "colour": "#a07850" },
+            "bump": 0.6, "rough": 0.9
+          },
+          "rows": { "a": { "weight": 1, "solid": 0.8 }, "b": { "weight": 1, "solid": 0.8 }, "c": { "weight": 1, "solid": 0.8 } },
+          "cell": 14,
+          "reach": 500,
+          "seed": 191,
+          "lods": [250],
+          "shadow": 60,
+          "leaf": 0,
+          "density": 0.35,
+          "rules": [{ "q": "layer:sand", "lo": 0.5, "hi": 0.85 }, { "q": "layer:mud", "lo": 0.4, "hi": 0.1 }, { "q": "slope", "lo": 0.3, "hi": 0.15 }],
+          "clearing": 0,
+          "size": [0.3, 2.2],
+          "vary": 0.35
+        }
+      },
+      "mods": { "land": "terrain3d" }
+    }
+  },
+  "plugins": ["loader", "scenemanager", "store", "player", "terrain3d", "shipped", "skydome3d", "ocean3d", "scatter3d", "render3d", "cutscene", "chasecamera3d", "ui", "stats"],
+  "seats": 4,
+  "prefabs": {
+    "engine": { "dt": 0.016666666666666666, "width": 1280, "height": 720 },
+    "scenemanager": { "out": {} },
+    "render3d": {
+      "camera": { "fov": 62, "near": 0.1, "far": 12000, "at": [0, 60, 0], "look": [10, 55, 10] },
+      "pixelRatio": 1,
+      "tone": "neutral",
+      "exposure": 1,
+      "shadows": "soft"
+    }
+  },
+  "actors": [
+    { "is": "scenemanager" },
+    { "is": "loader" },
+    { "is": "skydome3d" },
+    { "is": "ocean3d" },
+    { "is": "cutscene" },
+    { "is": "caption" },
+    { "is": "spinner" },
+    { "is": "start", "slot": 0, "at": [-700, 760], "up": 40, "yaw": 2.37, "pitch": 0.08 },
+    { "is": "start", "slot": 1, "at": [-690, 770], "up": 40, "yaw": 2.37, "pitch": 0.08 },
+    { "is": "start", "slot": 2, "at": [-710, 750], "up": 40, "yaw": 2.37, "pitch": 0.08 },
+    { "is": "start", "slot": 3, "at": [-700, 740], "up": 40, "yaw": 2.37, "pitch": 0.08 }
+  ]
+}

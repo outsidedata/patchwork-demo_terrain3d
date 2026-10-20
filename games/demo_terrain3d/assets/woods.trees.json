@@ -1,0 +1,21 @@
+{
+  "trees": {
+    "fir": { "species": "douglas-fir", "height": 20 },
+    "pine": { "species": "pine", "height": 6 },
+    "birch": { "species": "birch", "height": 15 },
+    "aspen": { "species": "aspen", "height": 14 },
+    "maple": { "species": "maple", "height": 11 },
+    "redmaple": { "species": "japanese-maple", "height": 7 },
+    "willow": { "species": "weeping-willow", "height": 14 },
+    "bottlebrush": { "species": "bottlebrush", "height": 5 }
+  },
+  "lods": [
+    { "name": "0", "resolution": 2, "keep": 1 },
+    { "name": "1", "resolution": 1, "keep": 2 },
+    { "name": "2", "resolution": 1, "levels": 2, "keep": 4 },
+    { "name": "3", "crown": { "bands": 4, "sides": 8, "taper": 0.8 } }
+  ],
+  "colours": { "bark": "#5a4636", "leaf": "#4f7d2f" },
+  "textures": { "leaf": 1024, "normal": 512 },
+  "node": "{tree}-{lod}-{part}"
+}

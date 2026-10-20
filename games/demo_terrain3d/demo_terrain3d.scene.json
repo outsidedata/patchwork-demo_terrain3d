@@ -1,0 +1,171 @@
+{
+  "world": {
+    "predict": { "epsilon": 0.000001, "cutoff": 60, "halflife": 100, "snap": 5, "below": 0.0001 },
+    "seed": 7,
+    "defs": "demo_terrain3d",
+    "loader": {
+      "assets": {
+        "demo_terrain3d": { "type": "json", "url": "/games/demo_terrain3d/assets/demo_terrain3d.json", "preload": true },
+        "uhd": { "type": "json", "url": "/games/demo_terrain3d/assets/uhd.json", "preload": true },
+        "hd": { "type": "json", "url": "/games/demo_terrain3d/assets/hd.json", "preload": true },
+        "lofi": { "type": "json", "url": "/games/demo_terrain3d/assets/lofi.json", "preload": true },
+        "weathers": { "type": "json", "url": "/games/demo_terrain3d/assets/weathers.json", "preload": true },
+        "tour": { "type": "json", "url": "/games/demo_terrain3d/assets/tour.json", "preload": true },
+        "helvetiker": { "type": "json", "url": "/games/demo_terrain3d/assets/helvetiker_bold.typeface.json", "preload": true },
+        "firs": { "type": "model", "url": "/games/demo_terrain3d/assets/firs.glb" },
+        "woods": { "type": "model", "url": "/games/demo_terrain3d/assets/woods.glb" },
+        "clumps": { "type": "model", "url": "/games/demo_terrain3d/assets/clumps.glb" },
+        "meadow-color-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/meadow-color-2048.webp", "wrap": "repeat" },
+        "meadow-normal-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/meadow-normal-2048.webp", "space": "linear", "wrap": "repeat" },
+        "meadow-color-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/meadow-color-1024.webp", "wrap": "repeat" },
+        "meadow-normal-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/meadow-normal-1024.webp", "space": "linear", "wrap": "repeat" },
+        "meadow-color-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/meadow-color-512.webp", "wrap": "repeat" },
+        "meadow-normal-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/meadow-normal-512.webp", "space": "linear", "wrap": "repeat" },
+        "rock-color-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/rock-color-2048.webp", "wrap": "repeat" },
+        "rock-normal-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/rock-normal-2048.webp", "space": "linear", "wrap": "repeat" },
+        "rock-color-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/rock-color-1024.webp", "wrap": "repeat" },
+        "rock-normal-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/rock-normal-1024.webp", "space": "linear", "wrap": "repeat" },
+        "rock-color-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/rock-color-512.webp", "wrap": "repeat" },
+        "rock-normal-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/rock-normal-512.webp", "space": "linear", "wrap": "repeat" },
+        "snow-color-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/snow-color-2048.webp", "wrap": "repeat" },
+        "snow-normal-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/snow-normal-2048.webp", "space": "linear", "wrap": "repeat" },
+        "snow-color-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/snow-color-1024.webp", "wrap": "repeat" },
+        "snow-normal-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/snow-normal-1024.webp", "space": "linear", "wrap": "repeat" },
+        "snow-color-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/snow-color-512.webp", "wrap": "repeat" },
+        "snow-normal-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/snow-normal-512.webp", "space": "linear", "wrap": "repeat" },
+        "gravel-color-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/gravel-color-2048.webp", "wrap": "repeat" },
+        "gravel-normal-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/gravel-normal-2048.webp", "space": "linear", "wrap": "repeat" },
+        "gravel-color-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/gravel-color-1024.webp", "wrap": "repeat" },
+        "gravel-normal-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/gravel-normal-1024.webp", "space": "linear", "wrap": "repeat" },
+        "gravel-color-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/gravel-color-512.webp", "wrap": "repeat" },
+        "gravel-normal-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/gravel-normal-512.webp", "space": "linear", "wrap": "repeat" },
+        "dry-ground-color-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/dry-ground-color-2048.webp", "wrap": "repeat" },
+        "dry-ground-normal-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/dry-ground-normal-2048.webp", "space": "linear", "wrap": "repeat" },
+        "dry-ground-color-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/dry-ground-color-1024.webp", "wrap": "repeat" },
+        "dry-ground-normal-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/dry-ground-normal-1024.webp", "space": "linear", "wrap": "repeat" },
+        "dry-ground-color-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/dry-ground-color-512.webp", "wrap": "repeat" },
+        "dry-ground-normal-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/dry-ground-normal-512.webp", "space": "linear", "wrap": "repeat" },
+        "cracked-mud-color-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/cracked-mud-color-2048.webp", "wrap": "repeat" },
+        "cracked-mud-normal-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/cracked-mud-normal-2048.webp", "space": "linear", "wrap": "repeat" },
+        "cracked-mud-color-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/cracked-mud-color-1024.webp", "wrap": "repeat" },
+        "cracked-mud-normal-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/cracked-mud-normal-1024.webp", "space": "linear", "wrap": "repeat" },
+        "cracked-mud-color-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/cracked-mud-color-512.webp", "wrap": "repeat" },
+        "cracked-mud-normal-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/cracked-mud-normal-512.webp", "space": "linear", "wrap": "repeat" },
+        "desert-rock-color-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/desert-rock-color-2048.webp", "wrap": "repeat" },
+        "desert-rock-normal-2048": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/desert-rock-normal-2048.webp", "space": "linear", "wrap": "repeat" },
+        "desert-rock-color-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/desert-rock-color-1024.webp", "wrap": "repeat" },
+        "desert-rock-normal-1024": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/desert-rock-normal-1024.webp", "space": "linear", "wrap": "repeat" },
+        "desert-rock-color-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/desert-rock-color-512.webp", "wrap": "repeat" },
+        "desert-rock-normal-512": { "type": "texture", "url": "/games/demo_terrain3d/assets/ground/desert-rock-normal-512.webp", "space": "linear", "wrap": "repeat" }
+      }
+    },
+    "skydome3d": {
+      "day": 1200,
+      "weathers": "weathers",
+      "soak": 6,
+      "dry": 45,
+      "lay": 55,
+      "melt": 90,
+      "gusts": [3, 7, 11],
+      "bolt": { "lasts": [0.12, 0.4], "out": [300, 2500] },
+      "biomes": {
+        "crags": { "add": { "cloud": 0.15, "haze": 0.2 }, "scale": { "wind": 1.5 } },
+        "glacier": { "add": { "cloud": 0.35, "fog": 0.12, "haze": 0.6 }, "scale": { "wind": 2.2, "base": 0.7 } },
+        "desert": { "add": { "haze": 0.3 }, "scale": { "wind": 1.3 } }
+      },
+      "look": {
+        "dayZenith": "#2961b3", "nightZenith": "#03050e", "dayHorizon": "#bdd1e0", "nightHorizon": "#090e1a",
+        "setZenith": "#47386b", "setHorizon": "#fa7a38", "sunHigh": "#fff2db", "sunLow": "#ff6b29", "moon": "#8cadff",
+        "ground": "#0a1218", "exposure": 1.05, "nightOpen": 0.35, "sunIntensity": 2.4, "moonIntensity": 0.35,
+        "hemiDay": 0.55, "hemiNight": 0.12, "cloudScale": 0.004, "cloudSharp": 0.42, "cloudDrift": 0.01,
+        "cloudShadow": 0.55, "godrays": 1, "stars": 1, "haze": 0.000121, "mist": 0.00988, "cloudLit": 0.35,
+        "cloudShade": 0.55, "lining": 0.8, "cirrusAlpha": 0.5, "starSize": 0.15, "twinkle": 0.4, "twinkles": 900,
+        "twinkleSpread": 5, "sunShrink": [0.05, 0.4], "sunEdge": 0.85, "moonEdge": 0.9, "moonSize": 0.0045,
+        "snowScale": 0.05, "flash": 0.8, "radius": 8000, "overcast": 0.2, "envSun": 0.02, "envMix": 0.05,
+        "envIntensity": 0.25
+      },
+      "precip": {
+        "rain": 40000, "snow": 60000, "dust": 2600, "splashes": 280, "range": 26, "edge": 3, "near": 1.5,
+        "rainFall": 16, "rainLen": 0.24, "rainWidth": 0.012, "rainOpacity": 0.24, "snowFall": 1.1, "snowSize": 0.03,
+        "snowOpacity": 0.9, "snowSway": [0.25, 1.3, 0.5], "dustFall": 0.1, "dustSize": 0.02, "dustOpacity": 0.22,
+        "dustColour": "#b08a5a", "dustSway": [0.6, 0.4, 0.6], "swayPeriod": 60, "splashSize": 0.12,
+        "splashLife": 0.35, "splashOpacity": 0.32, "splashRing": 0.25, "lift": 0.02, "keyShare": 0.3
+      },
+      "shadow": { "map": 2048, "half": 60, "near": 1, "far": 2400, "bias": -0.00002, "normalBias": 0.04 },
+      "mods": { "land": "terrain3d" }
+    },
+    "cutscene": { "script": "tour", "kinds": [], "settle": 4, "tremor": [[1, 31], [0.6, 47], [0.3, 23]], "mods": { "land": "terrain3d" } },
+    "ui": {
+      "panels": {
+        "caption": { "anchor": "top-left", "at": [16, 16], "size": [520, 150], "layer": 0 },
+        "cutscene.top": { "anchor": "top", "size": [1280, 70], "layer": 1 },
+        "cutscene.bottom": { "anchor": "bottom", "size": [1280, 70], "layer": 1 },
+        "cutscene.veil": { "anchor": "center", "size": [1280, 720], "layer": 3 },
+        "cutscene.line": { "anchor": "bottom", "at": [0, -84], "size": [1280, 48], "layer": 4 }
+      },
+      "keys": { "up": "ArrowUp", "down": "ArrowDown", "left": "ArrowLeft", "right": "ArrowRight", "press": ["Enter"], "back": "Escape" },
+      "styles": {
+        "caption.title": { "fontFamily": "monospace", "fontSize": 22, "fontWeight": "bold", "fill": 16765562, "stroke": { "color": 0, "width": 4, "join": "round" } },
+        "caption.text": { "fontFamily": "monospace", "fontSize": 14, "fill": 15658734, "stroke": { "color": 0, "width": 3, "join": "round" } },
+        "caption.keys": { "fontFamily": "monospace", "fontSize": 13, "fill": 11184810, "stroke": { "color": 0, "width": 3, "join": "round" } },
+        "cutscene.bars": { "color": 0 },
+        "cutscene.veil": { "color": 0 },
+        "cutscene.line": { "fontFamily": "serif", "fontSize": 26, "fontStyle": "italic", "fill": 15658734, "stroke": { "color": 0, "width": 4, "join": "round" } }
+      }
+    }
+  },
+  "prefabs": {
+    "engine": { "dt": 0.016666666666666666 },
+    "scenemanager": {
+      "scenes": {
+        "uhd": { "file": "uhd.scene.json", "suspend": true },
+        "hd": { "file": "hd.scene.json", "suspend": true },
+        "lofi": { "file": "lofi.scene.json", "suspend": true }
+      },
+      "dt": 0.016666666666666666,
+      "entry": "uhd",
+      "port": 9120
+    },
+    "loader": {},
+    "skydome3d": {
+      "t": 430,
+      "rate": 0,
+      "doy": 200,
+      "lat": 46,
+      "phase": 0.72,
+      "to": "fair",
+      "from": { "cloud": 0.34, "cirrus": 0.25, "base": 1400, "top": 2200, "dense": 1, "rain": 0, "snow": 0, "fog": 0.02, "haze": 1.2, "wind": 4.5, "gust": 0.3, "thunder": 0, "dust": 0.05 },
+      "mix": { "cloud": 0.34, "cirrus": 0.25, "base": 1400, "top": 2200, "dense": 1, "rain": 0, "snow": 0, "fog": 0.02, "haze": 1.2, "wind": 4.5, "gust": 0.3, "thunder": 0, "dust": 0.05 },
+      "blend": 1,
+      "fade": 20,
+      "wet": 0,
+      "pack": 0,
+      "windDeg": 210,
+      "flash": 0,
+      "strike": [0, 0],
+      "drift": [0, 0]
+    },
+    "ocean3d": { "t": 0 },
+    "cutscene": {},
+    "caption": {},
+    "spinner": { "turn": 0 },
+    "store": { "spinner.hold": false },
+    "start": { "slot": 0, "at": [0, 0], "up": 40, "yaw": 0, "pitch": 0.2 },
+    "player": {
+      "seat": 0,
+      "stood": false,
+      "pos": [0, 0, 0],
+      "look": { "yaw": 0, "pitch": 0.2, "dist": 0.1 },
+      "lift": 0,
+      "stick": [0, 0],
+      "up": false,
+      "down": false,
+      "fast": false,
+      "pace": 1,
+      "tour": false
+    }
+  },
+  "actors": [{ "is": "scenemanager" }],
+  "plugins": ["scenemanager"],
+  "seats": 1
+}

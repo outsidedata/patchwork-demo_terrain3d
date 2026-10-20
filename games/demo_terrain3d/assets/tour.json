@@ -1,0 +1,33 @@
+{
+  "end": 46,
+  "reach": 1,
+  "stop": 1,
+  "head": 1.5,
+  "fov": 55,
+  "pace": 1.4,
+  "limit": 10,
+  "cast": {},
+  "cues": [
+    { "at": 0, "do": "fade", "to": 1, "over": 0 },
+    { "at": 0, "do": "bars", "on": true, "over": 0 },
+    { "at": 0, "do": "prepare", "where": [-1700, 860] },
+    { "at": 0, "do": "shot", "name": "tarn", "pos": [-1700, 35, 860], "look": [-1350, 2, 520], "fov": 55, "over": 0 },
+    { "at": 0.2, "do": "fade", "to": 0, "over": 1.5 },
+    { "at": 0.2, "do": "shot", "name": "along the road", "pos": [-1000, 20, 650], "look": [-150, 40, 580], "over": 8.6 },
+    { "at": 0.5, "do": "prepare", "where": [-320, 660] },
+    { "at": 9, "do": "shot", "name": "road low", "pos": [-320, 4, 660], "look": [300, 6, 540], "fov": 60, "over": 0 },
+    { "at": 9.1, "do": "shot", "name": "road on", "pos": [340, 4, 540], "look": [1100, 25, 700], "over": 7.4 },
+    { "at": 9.5, "do": "prepare", "where": [-2200, 300] },
+    { "at": 16.6, "do": "shot", "name": "crags", "pos": [-2200, 140, 300], "look": [-3000, 120, -700], "fov": 55, "over": 0 },
+    { "at": 16.7, "do": "shot", "name": "crags in", "pos": [-2650, 160, -250], "look": [-3200, 80, -1300], "over": 8.3 },
+    { "at": 17, "do": "prepare", "where": [1400, -400] },
+    { "at": 25.1, "do": "shot", "name": "glacier", "pos": [1400, 160, -400], "look": [2500, 0, -1700], "fov": 55, "over": 0 },
+    { "at": 25.2, "do": "shot", "name": "glacier up", "pos": [2100, 260, -1050], "look": [3000, 0, -2000], "over": 8.8 },
+    { "at": 25.6, "do": "prepare", "where": [-200, 1700] },
+    { "at": 34.1, "do": "shot", "name": "valley", "pos": [-200, 500, 1700], "look": [200, 80, -1200], "fov": 60, "over": 0 },
+    { "at": 34.2, "do": "shot", "name": "valley out", "pos": [-900, 700, 1350], "look": [700, 150, -1800], "over": 9.8 },
+    { "at": 43.5, "do": "fade", "to": 1, "over": 1.5 },
+    { "at": 45, "do": "bars", "on": false, "over": 0 },
+    { "at": 45.2, "do": "fade", "to": 0, "over": 0.8 }
+  ]
+}

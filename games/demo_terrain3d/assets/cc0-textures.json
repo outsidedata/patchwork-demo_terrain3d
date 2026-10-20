@@ -1,0 +1,13 @@
+{
+  "folder": "ground",
+  "sizes": [2048, 1024, 512],
+  "sets": {
+    "meadow": { "set": "aerial_grass_rock_4K-JPG", "maps": ["color", "normal"] },
+    "rock": { "set": "Rock007_4K-JPG", "maps": ["color", "normal"] },
+    "snow": { "set": "snow_02_4K-JPG", "maps": ["color", "normal"] },
+    "gravel": { "set": "gravel_ground_01_4K-JPG", "maps": ["color", "normal"] },
+    "dry-ground": { "set": "dry_ground_rocks_4K-JPG", "maps": ["color", "normal"] },
+    "cracked-mud": { "set": "mud_cracked_dry_03_4K-JPG", "maps": ["color", "normal"] },
+    "desert-rock": { "set": "Rock029_4K-JPG", "maps": ["color", "normal"] }
+  }
+}

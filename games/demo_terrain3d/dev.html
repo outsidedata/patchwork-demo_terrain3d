@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>demo_terrain3d dev</title>
+    <style>
+      body { margin: 0; background: #0b0b0e; display: grid; place-items: center; height: 100vh }
+      canvas { grid-area: 1 / 1 }
+      .lil-gui.root { max-height: 100vh; overflow-y: auto }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      // The testbed's keys are its own (devBinds, below), and the panel picks the ground's view.
+      //
+      // The testbed: index.html, entering the HD tier, with three's stats panel (the stats plugin) at
+      // the top left, so each tier's frame rate is read as it is flown, and `?tier=<name>` to enter
+      // another tier directly (`uhd` or `lofi`). Three's lil-gui at the top right holds `keep loading
+      // graphic`, which sets the store's `spinner.hold`, so the graphic drawn while the terrain is built
+      // (`spinner.client.ts`) stays on screen to be worked on.
+      //
+      // The field panel tweaks this page's own copy of the tier's field, the one its terrain3d draws:
+      // every number of its `ground` (the composition, the height blend, the far read, the roughness,
+      // and each layer's scale, normal strength, projection, rules, noise, edge and warp octaves), and
+      // every number of every node of its height program (the dunes, the biomes' `sharp`, every noise).
+      // A change replaces the field's `ground` or `program` with the panel's copy a quarter second after
+      // the last one; terrain3d compares the field by content, so a change to the ground makes a new
+      // material and rebuilds no ring, and a change to the program rebuilds every ring. Nothing is
+      // written to disk and the server's truth keeps the file's field: `copy field JSON` copies the
+      // `ground` and the `program` as the panel has them, for `assets/valley.mjs`. `reset` puts the
+      // file's back. The panel is made again when the seat moves to another tier.
+      //
+      // The page, the client it holds now, the truth in this tab and every error a frame threw are on
+      // `window.dev`, for the console and a profiler; a frame that throws is logged and the next one
+      // runs. Nothing else reads what it sets.
+      import { boot } from '#engine/engine.ts'
+      import { accept, load, manager, link, view } from '#addons/scenemanager/scenemanager.addon.ts'
+      import { loopback } from '#addons/loopback/loopback.addon.ts'
+      import GUI from 'lil-gui'
+      import { sim } from './demo_terrain3d.sim.ts'
+      import file from './demo_terrain3d.scene.json'
+
+      file.prefabs.scenemanager.entry = new URLSearchParams(location.search).get('tier') ?? 'hd'
+
+      const dt = file.prefabs.engine.dt
+      const truth = boot(file, sim)
+      await load(truth, import.meta.url)
+      let client
+      const linked = link(loopback(accept(manager(truth))))
+      // The testbed's own keys, bound in place of whatever the seat's look binds, so no click takes the
+      // pointer and the panel is clicked freely: W and S fly forward and back, A and D turn left and
+      // right, E and Q tilt up and down, Shift climbs and Control sinks, the wheel paces, T tours, and
+      // 1, 2 and 3 move the seat to UHD, HD and lofi.
+      const TURN = 1.4, TILT = 0.9 // radians a second
+      let turned = performance.now()
+      const devBinds = {
+        stick: [{ keys: ['F13', 'F14', 'w', 's'], send: (x, y) => ['stick', x, y] }],
+        hold: [
+          { keys: ['Shift'], send: v => ['up', v] },
+          { keys: ['Control'], send: v => ['down', v] },
+        ],
+        press: { t: ['tour'], 1: ['tier', 1], 2: ['tier', 2], 3: ['tier', 3] },
+        every: held => {
+          const now = performance.now(), dt = Math.min((now - turned) / 1000, 0.1)
+          turned = now
+          const yaw = (held('a') ? 1 : 0) - (held('d') ? 1 : 0), pitch = (held('q') ? 1 : 0) - (held('e') ? 1 : 0)
+          return yaw || pitch ? ['look', yaw * TURN * dt, pitch * TILT * dt] : undefined
+        },
+        wheel: dy => ['pace', dy],
+      }
+      const page = view(linked, file, import.meta.url, (me, scene) => {
+        client = me
+        const player = me.plugins.player
+        if (player) { const bind = player.bind.bind(player); player.bind = () => bind(devBinds) }
+        for (const surface of [me.plugins.render3d ?? me.plugins.render2d, me.plugins.ui]) {
+          if (!surface) continue
+          const canvas = document.createElement('canvas')
+          canvas.width = scene.prefabs.engine.width
+          canvas.height = scene.prefabs.engine.height
+          document.body.appendChild(canvas)
+          surface.mount(canvas)
+        }
+        me.plugins.stats?.mount(document.body)
+      })
+      // The panel. Keys typed into it reach neither this page nor the eye.
+      const gui = new GUI({ title: 'demo_terrain3d dev' })
+      for (const type of ['keydown', 'keyup']) gui.domElement.addEventListener(type, e => e.stopPropagation())
+      const hold = { keep: false }
+      gui.add(hold, 'keep').name('keep loading graphic').onChange(v => { linked.store['spinner.hold'] = v })
+
+      // The ground's views (terrain3d's Views), in the panel: the value each sets is the material's
+      // `tdDebug`, written every frame, so a new material keeps the view.
+      const VIEWS = { lit: 0, weights: 2, warp: 3, mip: 4, albedo: 5, normals: 6, biomes: 7, slope: 8, 'bake albedo': 9, 'bake normal': 10, 'baked rings': 11 }
+      const views = { view: 'lit' }
+      gui.add(views, 'view', Object.keys(VIEWS)).name('ground view')
+      // for a script driving this page: the client, and the view by name
+      window.devPage = { client: () => client, view: v => { views.view = v } }
+      const showView = () => {
+        for (const r of client?.plugins.terrain3d?.rings ?? []) {
+          const u = r.mesh.material.userData.terrain3d
+          if (u) u.tdDebug.value = VIEWS[views.view]
+        }
+      }
+
+      // ---------- the field panel ----------
+
+      const clone = v => JSON.parse(JSON.stringify(v))
+      // the field this panel tweaks, the file's own parts as they were, the panel's copies, and its folder
+      let on = null
+      // A copy of the panel's `ground` or `program` laid into the field a quarter second after the last change.
+      const timers = {}
+      const apply = part => {
+        clearTimeout(timers[part])
+        timers[part] = setTimeout(() => { if (on) on.field[part] = clone(on[part]) }, 250)
+      }
+
+      // A slider for every number of `o`, keyed by `key`, ranged from `range(key, value)`.
+      const sliders = (folder, o, keys, range, part) => {
+        for (const key of keys) {
+          if (typeof o[key] !== 'number') continue
+          const [lo, hi, step] = range(key, o[key])
+          folder.add(o, key, lo, hi, step).onChange(() => apply(part))
+        }
+      }
+      // A range about a value for a number with no known range: from 0 (or below, for a negative) to
+      // four times it, in a thousand steps.
+      const about = v => {
+        const m = Math.max(Math.abs(v) * 4, 1e-3)
+        return [v < 0 ? -m : 0, m, m / 1000]
+      }
+
+      function rule(folder, r, part) {
+        const f = folder.addFolder(`${r.q}`)
+        f.close()
+        const span = r.q === 'height' ? [-50, 1000, 0.5] : r.q.startsWith('biome:') || r.q.startsWith('surface:') || r.q === 'slope' || r.q === 'relief' ? [-0.2, 1.2, 0.005] : about(Math.max(Math.abs(r.lo), Math.abs(r.hi)))
+        f.add(r, 'lo', ...span).name('lo (0 at)').onChange(() => apply(part))
+        f.add(r, 'hi', ...span).name('hi (1 at)').onChange(() => apply(part))
+      }
+
+      function octaves(folder, list, part) {
+        list.forEach((o, i) => {
+          const f = folder.addFolder(`warp octave ${i}`)
+          f.close()
+          f.add(o, 'freq', 0, 0.5, 0.0005).name('freq /m').onChange(() => apply(part))
+          f.add(o, 'amp', 0, 60, 0.1).name('amp m').onChange(() => apply(part))
+          f.add(o.stretch, 0, 0, 8, 0.05).name('stretch x').onChange(() => apply(part))
+          f.add(o.stretch, 1, 0, 8, 0.05).name('stretch y').onChange(() => apply(part))
+          f.add(o.stretch, 2, 0, 8, 0.05).name('stretch z').onChange(() => apply(part))
+          f.add(o, 'rotate', -Math.PI, Math.PI, 0.01).name('rotate about y').onChange(() => apply(part))
+        })
+      }
+
+      function groundPanel(folder, g) {
+        const part = 'ground'
+        folder.add(g, 'compose', ['stack', 'normalise', 'sharpened']).name('weights formula').onChange(() => apply(part))
+        g.roughness ??= 0.9
+        folder.add(g, 'roughness', 0, 1, 0.01).onChange(() => apply(part))
+        const hb = { on: !!g.heightBlend, ...(g.heightBlend ?? { amount: 2, depth: 0.1 }) }
+        const setHb = () => { g.heightBlend = hb.on ? { amount: hb.amount, depth: hb.depth } : undefined; apply(part) }
+        const hf = folder.addFolder('height blend')
+        hf.add(hb, 'on').onChange(setHb)
+        hf.add(hb, 'amount', 0, 4, 0.01).onChange(setHb)
+        hf.add(hb, 'depth', 0.01, 1, 0.01).onChange(setHb)
+        const far = { on: !!g.far, ...(g.far ?? { amount: 0.7, scale: 7.3 }) }
+        const setFar = () => { g.far = far.on ? { amount: far.amount, scale: far.scale } : undefined; apply(part) }
+        const ff = folder.addFolder('far read')
+        ff.add(far, 'on').onChange(setFar)
+        ff.add(far, 'amount', 0, 1, 0.01).onChange(setFar)
+        ff.add(far, 'scale', 2, 64, 0.1).name('× repeat').onChange(setFar)
+        g.layers.forEach((l, k) => {
+          const f = folder.addFolder(`layer ${k}: ${l.name}${k === 0 ? ' (base)' : ''}`)
+          f.close()
+          f.add(l, 'scale', 0.5, 100, 0.5).name('repeat m').onChange(() => apply(part))
+          l.strength ??= 1
+          f.add(l, 'strength', 0, 3, 0.05).name('normal strength').onChange(() => apply(part))
+          l.tri ??= false
+          f.add(l, 'tri').name('triplanar').onChange(() => apply(part))
+          l.sharp ??= 4
+          f.add(l, 'sharp', 1, 16, 0.5).name('triplanar sharpness').onChange(() => apply(part))
+          if (k === 0) { if (l.warp) octaves(f, l.warp, part); return }
+          ;(l.where ?? []).forEach(r => rule(f, r, part))
+          l.noise ??= { freq: 0.05, amp: 0 }
+          f.add(l.noise, 'freq', 0.001, 1, 0.001).name('noise freq /m').onChange(() => apply(part))
+          f.add(l.noise, 'amp', 0, 1.5, 0.01).name('noise amount').onChange(() => apply(part))
+          l.edge ??= 0.3
+          f.add(l, 'edge', 0, 1, 0.01).name('edge (0 cut, 1 soft)').onChange(() => apply(part))
+          if (l.warp) octaves(f, l.warp, part)
+        })
+      }
+
+      // Every number of every node, the stretch pair and each biome's numbers too.
+      function programPanel(folder, p) {
+        const part = 'program'
+        const ranges = (key, v) =>
+          key === 'freq' ? [0.1, Math.max(400, v * 2), 0.1]
+          : key === 'rotate' ? [-Math.PI, Math.PI, 0.01]
+          : key === 'sharp' ? [0.5, 20, 0.1]
+          : key === 't' ? [0, 1, 0.01]
+          : key === 'steps' ? [1, 20, 1]
+          : key === 'seed' ? [0, 1000, 1]
+          : about(v)
+        for (const n of p.nodes) {
+          const f = folder.addFolder(`${n.id} (${n.op}${n.kind ? ` ${n.kind}` : ''})`)
+          f.close()
+          sliders(f, n, Object.keys(n), ranges, part)
+          if (Array.isArray(n.stretch)) {
+            f.add(n.stretch, 0, 0.01, 8, 0.01).name('stretch x').onChange(() => apply(part))
+            f.add(n.stretch, 1, 0.01, 8, 0.01).name('stretch z').onChange(() => apply(part))
+          }
+          if (Array.isArray(n.radius)) {
+            f.add(n.radius, 0, 0, Math.max(500, n.radius[1] * 2), 1).name('radius min').onChange(() => apply(part))
+            f.add(n.radius, 1, 0, Math.max(500, n.radius[1] * 2), 1).name('radius max').onChange(() => apply(part))
+          }
+        }
+      }
+
+      function panel(field, name) {
+        const ground = clone(field.ground), program = clone(field.program)
+        const folder = gui.addFolder(`field: ${name}`)
+        on = { field, name, ground, program, folder, file: { ground: clone(field.ground), program: clone(field.program) } }
+        folder.add({ copy: () => navigator.clipboard?.writeText(JSON.stringify({ ground: on.ground, program: on.program }, null, 2)) }, 'copy').name('copy field JSON')
+        folder.add({ reset: () => {
+          field.ground = clone(on.file.ground)
+          field.program = clone(on.file.program)
+          const keep = on.file
+          folder.destroy()
+          on = null
+          panel(field, name)
+          on.file = keep
+        } }, 'reset').name('reset to the file')
+        groundPanel(folder.addFolder('ground layers'), ground)
+        const pf = folder.addFolder('land (height program)')
+        pf.close()
+        programPanel(pf, program)
+      }
+
+      // The panel follows the client the seat is on: made once that client's field has loaded.
+      let shown = null
+      const follow = () => {
+        if (!client || client === shown) return
+        const name = client.plugins.wire?.scene?.world?.terrain3d?.field
+        const field = name && client.plugins.loader?.get(name)
+        if (!field?.ground) return
+        on?.folder.destroy()
+        on = null
+        shown = client
+        panel(field, name)
+      }
+
+      // Every error a frame throws, kept, so one frame's throw is read rather than stopping the loop.
+      const errors = []
+      window.dev = { page, truth, errors, get client() { return client }, get field() { return on } }
+
+      let last = performance.now(), owed = 0
+      const loop = async now => {
+        owed += Math.min((now - last) / 1000, 0.25)
+        last = now
+        try {
+          page.input()
+          while (owed >= dt) { truth.step(dt); owed -= dt }
+          await page.frame(owed / dt)
+          follow()
+          showView()
+        } catch (e) {
+          errors.push(String(e && e.stack || e))
+          console.error(e)
+        }
+        requestAnimationFrame(loop)
+      }
+      requestAnimationFrame(loop)
+    </script>
+  </body>
+</html>

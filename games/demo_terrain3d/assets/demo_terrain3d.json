@@ -1,0 +1,58 @@
+{
+  "player": {
+    "speed": 30,
+    "boost": 6,
+    "climb": 20,
+    "clear": 2,
+    "ceiling": 3000,
+    "reach": 60000,
+    "pace": { "min": 0.1, "max": 10, "step": 0.0015 },
+    "camera": { "minPitch": -1.5, "maxPitch": 1.5 },
+    "tiers": ["uhd", "hd", "lofi"],
+    "sens": 0.0025,
+    "keys": {
+      "stick": ["a", "d", "w", "s"],
+      "up": [" "],
+      "down": ["c"],
+      "fast": ["Shift"],
+      "drag": "Mouse2",
+      "tiers": ["1", "2", "3"],
+      "tour": "t"
+    }
+  },
+  "spinner": {
+    "radius": 0.12,
+    "segments": 32,
+    "colour": "#2a2833",
+    "rough": 0.55,
+    "bare": 0,
+    "spin": 0,
+    "snake": { "colours": ["#82a9d2", "#7d6db5", "#e8c76a", "#e3a275", "#82a9d2", "#7d6db5", "#e8c76a", "#e3a275"], "step": 0.08, "fade": 1.2, "below": 0.05, "turn": [3, 9] },
+    "dist": 0.7,
+    "near": 0.01,
+    "far": 10,
+    "sky": "#dfe8f4",
+    "ground": "#3a3428",
+    "fill": 1.2,
+    "key": { "colour": "#fff2dc", "strength": 2.4, "from": [-1, 1.2, 1] },
+    "text": {
+      "words": "BUILDING TERRAIN",
+      "font": "helvetiker",
+      "size": 0.045,
+      "depth": 0.012,
+      "curve": 6,
+      "bevel": 0.002,
+      "bevelSegments": 2,
+      "colour": "#95b289",
+      "rough": 0.45,
+      "below": 0.2
+    }
+  },
+  "caption": {
+    "title": [0, 0],
+    "lines": [0, 34],
+    "line": 19,
+    "keys": [0, 118],
+    "help": "WASD fly  Space/C up/down  Shift fast  wheel pace  click: mouse look  1 UHD  2 HD  3 lofi  T tour"
+  }
+}
