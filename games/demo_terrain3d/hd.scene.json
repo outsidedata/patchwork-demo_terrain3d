@@ -5,7 +5,7 @@
       "lines": [
         "rings: 3 m cells near the eye, out to 9 km",
         "ground: ten warped photo layers at 1024² to the horizon, alpine and desert, height-blended",
-        "firs and boulders to 700 m, grass to 180 m, soft shadows to 240 m"
+        "firs and boulders to 960 m, billboards past 240 m, grass to 240 m, soft shadows to 240 m"
       ]
     },
     "shipped": { "plugins": ["seabed"] },
@@ -46,9 +46,8 @@
           "asset": "firs",
           "rows": { "tall": { "weight": 5, "solid": 0.35 }, "mid": { "weight": 3, "solid": 0.35 }, "small": { "weight": 2, "solid": 0.35 } },
           "cell": 20,
-          "reach": 700,
           "seed": 91,
-          "lods": [90, 220, 450],
+          "lods": [0, 3],
           "shadow": 60,
           "leaf": 0.55,
           "density": 0.5,
@@ -70,9 +69,8 @@
             "reeds": { "weight": 1 }
           },
           "cell": 3.5,
-          "reach": 180,
           "seed": 311,
-          "lods": [90],
+          "lods": [0],
           "shadow": 0,
           "leaf": 0.55,
           "density": 0.35,
@@ -95,9 +93,8 @@
           },
           "rows": { "a": { "weight": 1, "solid": 0.8 }, "b": { "weight": 1, "solid": 0.8 }, "c": { "weight": 1, "solid": 0.8 } },
           "cell": 30,
-          "reach": 500,
           "seed": 173,
-          "lods": [250],
+          "lods": [0, 0],
           "shadow": 60,
           "leaf": 0,
           "density": 0.5,
@@ -116,9 +113,8 @@
           },
           "rows": { "a": { "weight": 1, "solid": 0.8 }, "b": { "weight": 1, "solid": 0.8 }, "c": { "weight": 1, "solid": 0.8 } },
           "cell": 14,
-          "reach": 500,
           "seed": 191,
-          "lods": [250],
+          "lods": [0],
           "shadow": 60,
           "leaf": 0,
           "density": 0.35,

@@ -16,6 +16,6 @@
     { "name": "3", "crown": { "bands": 4, "sides": 8, "taper": 0.8 } }
   ],
   "colours": { "bark": "#5a4636", "leaf": "#4f7d2f" },
-  "textures": { "leaf": 1024, "normal": 512 },
+  "textures": { "leaf": 1024, "normal": 512, "bark": 1024, "barkNormal": 512 },
   "node": "{tree}-{lod}-{part}"
 }

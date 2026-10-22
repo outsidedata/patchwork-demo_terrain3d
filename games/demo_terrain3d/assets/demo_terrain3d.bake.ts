@@ -3,7 +3,8 @@
 // reads it.
 //   firs.glb     grown by the library's `trees/trees.py` (Blender's Sapling Tree Gen) from
 //                `firs.trees.json`: scatter3d's trees pack, the tall, mid and small spruces at their four
-//                levels of detail
+//                levels of detail, their leaves and bark wearing the cc0-textures leaf and bark sets their
+//                species name, which `texture` downloads into the library first
 //   woods.glb    grown the same way from `woods.trees.json`: eight trees of the library's species (a
 //                douglas fir, a pine, a birch, an aspen, a maple, a japanese maple, a weeping willow and
 //                a bottlebrush) at four levels of detail, named for a scatter3d pack as firs.glb is
@@ -19,11 +20,11 @@ import type { Tools } from '#scripts/bake.ts'
 const here = import.meta.dirname
 
 export default async ({ blender, pack, scratch, library, texture }: Tools) => {
-  const { leafSets } = await import(pathToFileURL(path.join(library, 'trees', 'trees.mjs')).href)
-  // a spec's leaf sets downloaded into the library first, then the trees grown from it
+  const { leafSets, barkSets } = await import(pathToFileURL(path.join(library, 'trees', 'trees.mjs')).href)
+  // a spec's leaf and bark sets downloaded into the library first, then the trees grown from it
   const trees = (spec: string) => async (raw: string) => {
-    for (const zip of leafSets(path.join(here, spec)) as string[]) await texture(zip)
-    return blender(['--factory-startup', '--python', path.join(library, 'trees', 'trees.py'), '--', path.join(here, spec), raw])
+    for (const zip of [...leafSets(path.join(here, spec)), ...barkSets(path.join(here, spec))] as string[]) await texture(zip)
+    return blender(['--factory-startup', '--python-exit-code', '1', '--python', path.join(library, 'trees', 'trees.py'), '--', path.join(here, spec), raw])
   }
   const make: Record<string, (raw: string) => Promise<unknown>> = {
     firs: trees('firs.trees.json'),

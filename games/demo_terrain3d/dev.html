@@ -40,11 +40,11 @@
       import { sim } from './demo_terrain3d.sim.ts'
       import file from './demo_terrain3d.scene.json'
 
-      file.prefabs.scenemanager.entry = new URLSearchParams(location.search).get('tier') ?? 'hd'
+      file.prefabs.scenemanager.entry = new URLSearchParams(location.search).get('scene') ?? new URLSearchParams(location.search).get('tier') ?? 'hd'
 
       const dt = file.prefabs.engine.dt
       const truth = boot(file, sim)
-      await load(truth, import.meta.url)
+      window.__scenes = await load(truth, import.meta.url)
       let client
       const linked = link(loopback(accept(manager(truth))))
       // The testbed's own keys, bound in place of whatever the seat's look binds, so no click takes the
@@ -82,6 +82,7 @@
         }
         me.plugins.stats?.mount(document.body)
       })
+      window.__page = page
       // The panel. Keys typed into it reach neither this page nor the eye.
       const gui = new GUI({ title: 'demo_terrain3d dev' })
       for (const type of ['keydown', 'keyup']) gui.domElement.addEventListener(type, e => e.stopPropagation())
